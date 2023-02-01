@@ -1,45 +1,44 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import TheHeader from "./components/TheHeader.vue";
-import TodoList from "./components/TodoList.vue";
 import { useTodoStore } from "./stores/todos";
 import { storeToRefs } from "pinia";
-const name = ref("");
-const store = useTodoStore()
-
-const {todos} = storeToRefs(store);
-const {addTodo} = store;
+var drawer = ref(true);
+var rail = ref(true);
 </script>
-
 <template>
-  <TheHeader />
+<v-card>
+  <v-layout>
+    <v-navigation-drawer
+      v-model="drawer"
+      :rail="rail"
+      permanent
+      @click="rail = false"
+    >
+      <v-list-item
+        prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
+        title="John Leider"
+        nav
+      >
+        <template v-slot:append>
+          <v-btn
+            variant="text"
+            icon="mdi-chevron-left"
+            @click.stop="rail = !rail"
+          ></v-btn>
+        </template>
+      </v-list-item>
 
-  <main class="flex flex-col items-center">
-    <form @submit.prevent="addTodo(name)">
-      <div class="flex items-center justify-center">
-        <input
-          id="todo-input"
-          class="border-b outline-none w-96 px-4 py-2"
-          type="text"
-          v-model="name"
-          placeholder="Please input todo name..."
-        />
-        <button class="bg-blue-500 text-white px-4 py-2">Add</button>
-      </div>
-    </form>
+      <v-divider></v-divider>
 
-    <TodoList />
-  </main>
+      <v-list density="compact" nav>
+        <v-list-item prepend-icon="mdi-home-city" title="Home" value="home" to="/"></v-list-item>
+        <v-list-item prepend-icon="mdi-account" title="My Account" value="account" to="/about"></v-list-item>
+        <v-list-item prepend-icon="mdi-account-group-outline" title="Todo" value="todos" to="/todos"></v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <v-main><router-view></router-view></v-main>
+  </v-layout>
+</v-card>
 </template>
 
-<style>
-.alerts-container {
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  top: 20px;
-  right: 40px;
-  width: 380px;
-}
-</style>
+
